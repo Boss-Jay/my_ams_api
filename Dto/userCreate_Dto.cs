@@ -15,6 +15,7 @@ namespace Ams_Api.Dto
         [Required(ErrorMessage = "Branch is required !")]
         public int? Branchid { get; set; }
         public DateTime? Date { get; set; } = DateTime.Now;
+        [Required(ErrorMessage = "Username is required !")]
         public string? Username { get; set; }
         public string? Password { get; set; }
         [Required(ErrorMessage = "Role is required !")]
