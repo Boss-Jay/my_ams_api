@@ -43,7 +43,9 @@ namespace Ams_Api.Controllers
                     .FirstOrDefault() ?? "",
                     Status = u.Status,
                     StatusDesc = (u.Status == 1) ? "Active" : "Non-Active"
-                }).ToListAsync();
+                })
+                .OrderByDescending(u => u.Date)
+                .ToListAsync();
             return Ok(user);
         }
         [HttpPost("create-user")]
@@ -155,6 +157,53 @@ namespace Ams_Api.Controllers
             return Ok(new
             {
                 message = "User is successfully updated !"
+            });
+        }
+        [HttpPut("update-user-status")]
+        public async Task<IActionResult> Update_User_Status(int? Id, int? StatusId)
+        {
+            var user = await _amscontext.UserAccounts.FindAsync(Id);
+
+            if (user == null)
+            {
+                return BadRequest("User is not found!");
+            }
+            user.Status = StatusId;
+            await _amscontext.SaveChangesAsync();
+            return Ok(new
+            {
+                message = StatusId == 1
+                  ? "User has been activated."
+                  : "User has been deactivated."
+            });
+        }
+        [HttpGet("dashboard_count")]
+        public async Task<IActionResult> Dashboard_Count()
+        {
+            var query = _amscontext.UserAccounts.AsQueryable();
+            var count = new userDashboard_Dto { 
+                TotalUser = await query.CountAsync(),
+                User_Active = await query.CountAsync(u => u.Status == 1),
+                User_Not_Active = await query.CountAsync(u => u.Status == 0)
+            };
+            return Ok(count);
+        }
+        [HttpPut("user-change-pass")]
+        public async Task<IActionResult> Change_Password(userChange_Password _userChange_Password)
+        {
+            var user = await  _amscontext.UserAccounts
+                .FirstOrDefaultAsync(u => u.Username == _userChange_Password.Username);
+            if(user == null)
+                return NotFound("User is not found!");
+            if(_userChange_Password.NewPassword != _userChange_Password.RetypeNewPassword)
+                return BadRequest("Password is not match!");
+
+            user.Password = BCrypt.Net.BCrypt.HashPassword(_userChange_Password.RetypeNewPassword);
+            await _amscontext.SaveChangesAsync();
+
+            return Ok(new
+            {
+                message = "Password changed successfully."
             });
         }
     }

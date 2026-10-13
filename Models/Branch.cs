@@ -29,7 +29,9 @@ public partial class Branch
 
     public DateTime? Date { get; set; }
 
-    public string? Email { get; set; }
+    public string? Email1 { get; set; }
+
+    public string? Email2 { get; set; }
 
     public DateTime? DateUpdate { get; set; }
 

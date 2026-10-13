@@ -38,6 +38,8 @@ public partial class AmsDbContext : DbContext
 
     public virtual DbSet<BirAtc> BirAtcs { get; set; }
 
+    public virtual DbSet<BirAtcCorp> BirAtcCorps { get; set; }
+
     public virtual DbSet<BodAllowance> BodAllowances { get; set; }
 
     public virtual DbSet<BodOfficer> BodOfficers { get; set; }
@@ -54,7 +56,11 @@ public partial class AmsDbContext : DbContext
 
     public virtual DbSet<TenantsVatoutput> TenantsVatoutputs { get; set; }
 
+    public virtual DbSet<UserAccess> UserAccesses { get; set; }
+
     public virtual DbSet<UserAccount> UserAccounts { get; set; }
+
+    public virtual DbSet<UserModule> UserModules { get; set; }
 
     public virtual DbSet<UserRole> UserRoles { get; set; }
 
@@ -80,13 +86,14 @@ public partial class AmsDbContext : DbContext
 
         modelBuilder.Entity<AccntChartofaccount>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
+            entity.HasKey(e => e.CoaId).HasName("PRIMARY");
 
             entity.ToTable("accnt_chartofaccount");
 
-            entity.Property(e => e.Date).HasColumnType("date");
-            entity.Property(e => e.Description).HasMaxLength(150);
+            entity.Property(e => e.AddedDate).HasColumnType("date");
+            entity.Property(e => e.CoaDesc).HasMaxLength(150);
             entity.Property(e => e.EditDate).HasColumnType("date");
+            entity.Property(e => e.Tag).HasMaxLength(5);
         });
 
         modelBuilder.Entity<AccntPaymode>(entity =>
@@ -226,9 +233,19 @@ public partial class AmsDbContext : DbContext
             entity.ToTable("bir_atc");
 
             entity.Property(e => e.Code).HasMaxLength(45);
-            entity.Property(e => e.CorpRate).HasPrecision(10);
             entity.Property(e => e.Description).HasMaxLength(250);
             entity.Property(e => e.Rate).HasPrecision(10);
+        });
+
+        modelBuilder.Entity<BirAtcCorp>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("bir_atc_corp");
+
+            entity.Property(e => e.Code).HasMaxLength(45);
+            entity.Property(e => e.Description).HasMaxLength(250);
+            entity.Property(e => e.Rate).HasPrecision(5);
         });
 
         modelBuilder.Entity<BodAllowance>(entity =>
@@ -263,7 +280,8 @@ public partial class AmsDbContext : DbContext
             entity.Property(e => e.Contact2).HasMaxLength(45);
             entity.Property(e => e.Date).HasColumnType("date");
             entity.Property(e => e.DateUpdate).HasColumnType("date");
-            entity.Property(e => e.Email).HasMaxLength(45);
+            entity.Property(e => e.Email1).HasMaxLength(45);
+            entity.Property(e => e.Email2).HasMaxLength(45);
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.Ocn)
                 .HasMaxLength(45)
@@ -353,6 +371,15 @@ public partial class AmsDbContext : DbContext
             entity.Property(e => e.VatInput).HasPrecision(10);
         });
 
+        modelBuilder.Entity<UserAccess>(entity =>
+        {
+            entity.HasKey(e => new { e.Id, e.UserId, e.ModuleId }).HasName("PRIMARY");
+
+            entity.ToTable("user_access");
+
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+        });
+
         modelBuilder.Entity<UserAccount>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
@@ -370,6 +397,15 @@ public partial class AmsDbContext : DbContext
                 .HasDefaultValueSql("'hash password'");
             entity.Property(e => e.Suffix).HasMaxLength(45);
             entity.Property(e => e.Username).HasMaxLength(45);
+        });
+
+        modelBuilder.Entity<UserModule>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("user_module");
+
+            entity.Property(e => e.Module).HasMaxLength(100);
         });
 
         modelBuilder.Entity<UserRole>(entity =>

@@ -12,6 +12,4 @@ public partial class BirAtc
     public string? Code { get; set; }
 
     public decimal? Rate { get; set; }
-
-    public decimal? CorpRate { get; set; }
 }
