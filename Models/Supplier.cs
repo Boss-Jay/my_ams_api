@@ -7,13 +7,11 @@ public partial class Supplier
 {
     public int Id { get; set; }
 
-    public int? BranchId { get; set; }
-
     public int? Type { get; set; }
 
     public string? Tin { get; set; }
 
-    public string? TinbranchCode { get; set; }
+    public string? BranchCode { get; set; }
 
     public string? Lastname { get; set; }
 
@@ -23,7 +21,7 @@ public partial class Supplier
 
     public string? Suffix { get; set; }
 
-    public DateTime? Date { get; set; }
+    public DateTime? CreatedDate { get; set; }
 
     public string? Corporation { get; set; }
 
@@ -36,4 +34,10 @@ public partial class Supplier
     public string? Atcextension { get; set; }
 
     public int? TaxReg { get; set; }
+
+    public int? Createdby { get; set; }
+
+    public DateTime? EditDate { get; set; }
+
+    public int? EditBy { get; set; }
 }

@@ -93,6 +93,24 @@ namespace Ams_Api.Controllers
                 .ToListAsync();
             return Ok(role);
         }
+        [HttpGet("get-user-listing")]
+        public async Task<IActionResult> Get_User_List()
+        {
+            var users = await _amscontext.UserAccounts
+                .OrderBy(r => r.Lastname)
+                .Select(r => new
+                {
+                    r.Id,
+                    Fullname = r.Lastname + ", " +
+                               r.Firstname + " " +
+                               (r.Middlename != null && r.Middlename.Length > 0
+                                   ? r.Middlename.Substring(0, 1) + "."
+                                   : "")
+                })
+                .ToListAsync();
+
+            return Ok(users);
+        }
         [HttpGet("get-branch-list")]
         public async Task<IActionResult> Get_Branch_List()
         {

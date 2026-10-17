@@ -308,24 +308,19 @@ public partial class AmsDbContext : DbContext
 
             entity.ToTable("supplier");
 
-            entity.Property(e => e.Address).HasMaxLength(150);
+            entity.Property(e => e.Address).HasMaxLength(250);
             entity.Property(e => e.Atcextension)
                 .HasMaxLength(10)
                 .HasColumnName("ATCExtension");
+            entity.Property(e => e.BranchCode).HasMaxLength(10);
             entity.Property(e => e.Corporation).HasMaxLength(150);
-            entity.Property(e => e.Date)
-                .HasColumnType("date")
-                .HasColumnName("date");
+            entity.Property(e => e.CreatedDate).HasColumnType("date");
+            entity.Property(e => e.EditDate).HasColumnType("date");
             entity.Property(e => e.Firstname).HasMaxLength(50);
             entity.Property(e => e.Lastname).HasMaxLength(50);
             entity.Property(e => e.MiddleInitial).HasMaxLength(20);
             entity.Property(e => e.Suffix).HasMaxLength(45);
-            entity.Property(e => e.Tin)
-                .HasMaxLength(45)
-                .HasColumnName("TIN");
-            entity.Property(e => e.TinbranchCode)
-                .HasMaxLength(10)
-                .HasColumnName("TINBranchCode");
+            entity.Property(e => e.Tin).HasMaxLength(45);
             entity.Property(e => e.Tradename).HasMaxLength(100);
         });
 
@@ -373,11 +368,9 @@ public partial class AmsDbContext : DbContext
 
         modelBuilder.Entity<UserAccess>(entity =>
         {
-            entity.HasKey(e => new { e.Id, e.UserId, e.ModuleId }).HasName("PRIMARY");
+            entity.HasKey(e => new { e.UserId, e.ModuleId }).HasName("PRIMARY");
 
             entity.ToTable("user_access");
-
-            entity.Property(e => e.Id).ValueGeneratedOnAdd();
         });
 
         modelBuilder.Entity<UserAccount>(entity =>

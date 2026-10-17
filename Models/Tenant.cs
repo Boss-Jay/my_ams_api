@@ -25,6 +25,8 @@ public partial class Tenant
 
     public string? City { get; set; }
 
+    public int? Zipcode { get; set; }
+
     public DateTime? Date { get; set; }
 
     public int? Status { get; set; }
